@@ -1,1 +1,40 @@
-[{"id":"098f6545-c973-4226-a643-5c23465c8d4b","name":"Test User18","orders":[]},{"id":"123e4567-e89b-12d3-a456-426614174000","name":"John Doe","orders":[]}]
+[
+  {
+    "id": "098f6545-c973-4226-a643-5c23465c8d4b",
+    "name": "Test User18",
+    "orders": []
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174002",
+    "name": "John Doe",
+    "orders": []
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "name": "John Doe",
+    "orders": [
+      {
+        "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        "userId": "123e4567-e89b-12d3-a456-426614174000",
+        "totalPrice": 59.99,
+        "products": [
+          {
+            "id": "111e4567-e89b-12d3-a456-426614174001",
+            "name": "Laptop Stand",
+            "price": 29.99
+          },
+          {
+            "id": "222e4567-e89b-12d3-a456-426614174002",
+            "name": "Wireless Mouse",
+            "price": 30.0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "name": "John Doe",
+    "orders": []
+  }
+]

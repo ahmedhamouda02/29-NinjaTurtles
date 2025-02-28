@@ -47,27 +47,22 @@ public class UserRepository extends MainRepository<User> {
         return (user != null) ? user.getOrders() : new ArrayList<>();
     }
 
-    // Add an order to a specific user
-    public void addOrderToUser(UUID userId, Order order) {
-        User user = getUserById(userId);
-        if (user != null) {
-            user.getOrders().add(order);
-            save(user);
-        }
-    }
+//    // Add an order to a specific user
+//    public void addOrderToUser(UUID userId, Order order) {
+//        User user = getUserById(userId);
+//        if (user != null) {
+//            user.getOrders().add(order);
+//            save(user);
+//        }
+//    }
 
     // Remove an order from a user
     public void removeOrderFromUser(UUID userId, UUID orderId) {
-        ArrayList<User> users = findAll();
-        users.forEach(user -> {
-            if (user.getId().equals(userId)) {
-                user.setOrders(user.getOrders().stream()
-                        .filter(order -> !order.getId().equals(orderId))
-                        .collect(Collectors.toList()));
-            }
-        });
-        saveAll(users);
+        User user = getUserById(userId);
+        user.getOrders().removeIf(order -> order.getId().equals(orderId));
+        save(user);
     }
+
 
     // Delete a user by ID
     public void deleteUserById(UUID userId) {

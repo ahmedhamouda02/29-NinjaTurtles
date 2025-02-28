@@ -92,9 +92,31 @@ public class UserService {
     }
 
     // Add an order to a user
-    public void addOrderToUser(UUID userId, Order order) {
-        userRepository.addOrderToUser(userId, order);
-    }
+
+
+//    public void addOrderToUser(UUID userId, Order order) {
+//        if (userId == null) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID cannot be null.");
+//        }
+//        if (order == null) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order cannot be null.");
+//        }
+//
+//        User user = userRepository.getUserById(userId);
+//        if (user == null) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + userId + " not found.");
+//        }
+//
+//        if (user.getOrders() == null) {
+//            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User's order list is not initialized.");
+//        }
+//
+//        if (user.getOrders().contains(order)) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order is already associated with this user.");
+//        }
+//
+//        userRepository.addOrderToUser(userId, order);
+//    }
 
     // Empty the cart (removes all orders from a user's order list)
     public void emptyCart(UUID userId) {
@@ -107,8 +129,33 @@ public class UserService {
 
     // Remove an order from a user
     public void removeOrderFromUser(UUID userId, UUID orderId) {
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID cannot be null.");
+        }
+        if (orderId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order ID cannot be null.");
+        }
+
+        User user = userRepository.getUserById(userId);
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + userId + " not found.");
+        }
+
+        if (user.getOrders() == null || user.getOrders().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User has no orders to remove.");
+        }
+
+        boolean orderExists = user.getOrders().stream()
+                .anyMatch(order -> order.getId().equals(orderId));
+
+        if (!orderExists) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with ID " + orderId + " not found for this user.");
+        }
+
         userRepository.removeOrderFromUser(userId, orderId);
     }
+
 
     // Delete a user by ID
     public void deleteUserById(UUID userId) {

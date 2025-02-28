@@ -62,18 +62,31 @@ public class UserController {
     }
 
     // Checkout and add orders to user (assuming some checkout process)
-    @PostMapping("/{userId}/checkout")
-    public String addOrderToUser(@PathVariable UUID userId, @RequestBody Order order) {
-        userService.addOrderToUser(userId, order);
-        return "Order added successfully!";
-    }
+//    @PostMapping("/{userId}/checkout")
+//    public ResponseEntity<?> addOrderToUser(@PathVariable UUID userId, @RequestBody Order order) {
+//        try {
+//            userService.addOrderToUser(userId, order);
+//            return ResponseEntity.ok("Order added successfully!");
+//        } catch (ResponseStatusException e) {
+//            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+//        }
+//    }
 
     // Remove an order from a user
     @PostMapping("/{userId}/removeOrder")
-    public String removeOrderFromUser(@PathVariable UUID userId, @RequestParam UUID orderId) {
-        userService.removeOrderFromUser(userId, orderId);
-        return "Order removed successfully!";
+    public ResponseEntity<String> removeOrderFromUser(@PathVariable UUID userId, @RequestParam UUID orderId) {
+        try {
+            userService.removeOrderFromUser(userId, orderId);
+            return ResponseEntity.ok("Order removed successfully!");
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        }
     }
+
 
     // Empty a user's cart
     @DeleteMapping("/{userId}/emptyCart")
