@@ -25,7 +25,7 @@ public class CartController {
         try {
             return cartService.addCart(cart);
         } catch (IllegalArgumentException e){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException( "Error Adding Cart");
         }
     }
 
@@ -45,7 +45,7 @@ public class CartController {
             cartService.addProductToCart(cartId, product);
             return "Product added to cart";
         } catch (IllegalArgumentException e){
-            throw new IllegalArgumentException();
+            return "Either cart not found or product is invalid";
         }
     }
 
@@ -55,7 +55,7 @@ public class CartController {
             cartService.deleteCartById(cartId);
             return "Cart deleted successfully";
         } catch (IllegalArgumentException e){
-            throw new IllegalArgumentException();
+            return "Error deleting cart";
         }
     }
 
