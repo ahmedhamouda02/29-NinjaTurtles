@@ -16,7 +16,11 @@ public class Cart {
     public Cart() {
     }
 
+<<<<<<< HEAD
     public Cart(UUID userId, List<Product> products) {
+=======
+    public Cart(UUID userId , List<Product> products) {
+>>>>>>> main
         this.userId = userId;
         this.products = products;
     }
@@ -52,4 +56,8 @@ public class Cart {
     }
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
 }
