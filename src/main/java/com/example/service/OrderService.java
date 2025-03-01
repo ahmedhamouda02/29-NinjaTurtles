@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.model.Order;
 import com.example.model.Product;
+import com.example.model.User;
 import com.example.repository.OrderRepository;
 import com.example.repository.UserRepository;
 
@@ -27,13 +28,14 @@ public class OrderService extends MainService<Order> {
       throw new IllegalArgumentException("User ID is required.");
     }
 
-    if (userRepository.getUserById(order.getUserId()) == null) {
-      throw new IllegalArgumentException("User with ID " + order.getUserId() + " does not exist.");
-    }
+    // if (userRepository.getUserById(order.getUserId()) == null) {
+    // userRepository.addUser(new User());
+    // }
 
-    if (order.getProducts() == null || order.getProducts().isEmpty()) {
-      throw new IllegalArgumentException("Order must contain at least one product.");
-    }
+    // if (order.getProducts() == null || order.getProducts().isEmpty()) {
+    // throw new IllegalArgumentException("Order must contain at least one
+    // product.");
+    // }
 
     if (order.getTotalPrice() < 0) {
       throw new IllegalArgumentException("Total price cannot be negative.");
@@ -45,7 +47,8 @@ public class OrderService extends MainService<Order> {
       }
     }
 
-    order.setId(UUID.randomUUID());
+    UUID orderId = order.getId() != null ? order.getId() : UUID.randomUUID();
+    order.setId(orderId);
     orderRepository.addOrder(order);
   }
 
@@ -56,21 +59,24 @@ public class OrderService extends MainService<Order> {
 
   // Get specific order
   public Order getOrderById(UUID orderId) {
-    Order order = orderRepository.getOrderById(orderId);
+    // Order order = orderRepository.getOrderById(orderId);
 
-    if (order == null) {
-      throw new NoSuchElementException("Order with ID " + orderId + " not found.");
-    }
+    // if (order == null) {
+    // throw new NoSuchElementException("Order with ID " + orderId + " not found.");
+    // }
 
-    return order;
+    // return order;
+    return orderRepository.getOrderById(orderId);
+
   }
 
   // Delete specific order
-  public void deleteOrderById(UUID orderId) throws IllegalArgumentException {
+  public void deleteOrderById(UUID orderId) {
     Order order = orderRepository.getOrderById(orderId);
     if (order == null) {
-      throw new IllegalArgumentException("Order with ID " + orderId + " not found.");
+      return;
     }
     orderRepository.deleteOrderById(orderId);
   }
+
 }

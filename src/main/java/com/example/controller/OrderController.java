@@ -19,7 +19,7 @@ public class OrderController {
   // Add a new order
   @PostMapping("/")
   public void addOrder(@RequestBody Order order) {
-    orderService.addOrder(order); // 🚀 No need for try-catch
+    orderService.addOrder(order);
   }
 
   // Get a specific order
@@ -47,10 +47,10 @@ public class OrderController {
 
     Order order = orderService.getOrderById(orderId);
     if (order == null) {
-      throw new NoSuchElementException("Order with ID " + orderId + " not found.");
+      return "Order not found";
     }
 
     orderService.deleteOrderById(orderId);
-    return "Order deleted successfully.";
+    return "Order deleted successfully";
   }
 }
