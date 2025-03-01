@@ -2,6 +2,7 @@ package com.example.controller;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -70,7 +71,7 @@ public class ProductController {
 
     // ✅ Get a Product by ID with UUID Validation
     @GetMapping("/{productId}")
-    public ResponseEntity<?> getProductById(@PathVariable String productId) {
+    public ResponseEntity<?> getProductById(@PathVariable UUID productId) {
         try {
             return ResponseEntity.ok(productService.getProductById(productId));
         } catch (Exception e) {

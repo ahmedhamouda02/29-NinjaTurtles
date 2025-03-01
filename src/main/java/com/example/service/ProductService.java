@@ -41,10 +41,9 @@ public class ProductService {
     }
 
     // ✅ Get Product By ID with UUID Validation
-    public Product getProductById(String productId) {
+    public Product getProductById(UUID productId) {
         try {
-            UUID uuid = UUID.fromString(productId);
-            Product product = productRepository.getProductById(uuid);
+            Product product = productRepository.getProductById(productId);
             if (product == null) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found.");
             }

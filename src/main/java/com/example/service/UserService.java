@@ -1,5 +1,7 @@
 package com.example.service;
 
+import com.example.model.Cart;
+import com.example.model.Product;
 import com.example.model.User;
 import com.example.model.Order;
 import com.example.repository.UserRepository;
@@ -18,6 +20,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private  CartService cartService;
 
     // Constructor with Dependency Injection
     public UserService(UserRepository userRepository) {
@@ -39,6 +44,7 @@ public class UserService {
         return user;
     }
 
+    // Validate user information
     private void validateUser(User user, ArrayList<User> users) {
         if (user.getName() == null || user.getName().trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User name should not be empty.");
@@ -55,6 +61,7 @@ public class UserService {
         }
     }
 
+    // Validate order information
     private void validateOrder(Order order, User user) {
         if (order.getUserId() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Each order must be associated with a user.");
@@ -73,60 +80,83 @@ public class UserService {
 
     // Get all users
     public ArrayList<User> getUsers() {
-        return userRepository.getUsers();
+        ArrayList<User> users = userRepository.getUsers();
+        if(users.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Users not found");
+        }
+        return users;
     }
 
     // Get user by ID
     public User getUserById(UUID userId) {
-        User user = userRepository.getUserById(userId);
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + userId + " not found.");
-        }
+        User user = getUserByIdOrThrow(userId);
         return user;
     }
 
     // Get all orders for a user
     public List<Order> getOrdersByUserId(UUID userId) {
-        User user = userRepository.getUserById(userId);
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + userId + " not found.");
-        }
+        getUserByIdOrThrow(userId);
         return userRepository.getOrdersByUserId(userId);
     }
 
     // Add an order to a user
+    public void addOrderToUser(UUID userId, Order order) {
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID cannot be null.");
+        }
+        if (order == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order cannot be null.");
+        }
 
+        User user = getUserByIdOrThrow(userId);
+        Cart cart = getCartByUserOrThrow(userId);
+        double totalPrice = calculateTotalPrice(cart);
+        Order newOrder = createNewOrder(userId, cart, totalPrice);
+        userRepository.addOrderToUser(userId, newOrder);
+        emptyUserCart(cart);
+    }
 
-//    public void addOrderToUser(UUID userId, Order order) {
-//        if (userId == null) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID cannot be null.");
-//        }
-//        if (order == null) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order cannot be null.");
-//        }
-//
-//        User user = userRepository.getUserById(userId);
-//        if (user == null) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + userId + " not found.");
-//        }
-//
-//        if (user.getOrders() == null) {
-//            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User's order list is not initialized.");
-//        }
-//
-//        if (user.getOrders().contains(order)) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order is already associated with this user.");
-//        }
-//
-//        userRepository.addOrderToUser(userId, order);
-//    }
+    // Validate and retrieve user's cart
+    private Cart getCartByUserOrThrow(UUID userId) {
+        Cart cart = cartService.getCartByUserId(userId);
+        if (cart == null || cart.getProducts().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot create an order. The cart is empty.");
+        }
+        return cart;
+    }
+
+    // Calculate total price of cart items
+    private double calculateTotalPrice(Cart cart) {
+        return cart.getProducts().stream()
+                .mapToDouble(Product::getPrice)
+                .sum();
+    }
+
+    // Create new order with cart details
+    private Order createNewOrder(UUID userId, Cart cart, double totalPrice) {
+        return new Order(UUID.randomUUID(), userId, totalPrice, new ArrayList<>(cart.getProducts()));
+    }
+
+    // Empty the user's cart after order creation
+    private void emptyUserCart(Cart cart) {
+        cartService.deleteCartById(cart.getId());
+    }
 
     // Empty the cart (removes all orders from a user's order list)
     public void emptyCart(UUID userId) {
-        User user = userRepository.getUserById(userId);
-        if (user != null) {
-            user.setOrders(new ArrayList<>());
-            userRepository.saveAll(userRepository.getUsers());
+        User user = getUserByIdOrThrow(userId);
+        Cart cart = getCartByUserOrThrow(userId);
+        clearCartProducts(cart);
+    }
+
+    // Clear all products from the cart
+    private void clearCartProducts(Cart cart) {
+        if (!cart.getProducts().isEmpty()) {
+            for (Product product : cart.getProducts()) {
+                cartService.deleteProductFromCart(cart.getId(), product);
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No products found");
         }
     }
 
@@ -139,11 +169,7 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order ID cannot be null.");
         }
 
-        User user = userRepository.getUserById(userId);
-
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + userId + " not found.");
-        }
+        User user = getUserByIdOrThrow(userId);
 
         if (user.getOrders() == null || user.getOrders().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User has no orders to remove.");
@@ -153,19 +179,24 @@ public class UserService {
                 .anyMatch(order -> order.getId().equals(orderId));
 
         if (!orderExists) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with ID " + orderId + " not found for this user.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found");
         }
 
         userRepository.removeOrderFromUser(userId, orderId);
     }
 
-
     // Delete a user by ID
     public void deleteUserById(UUID userId) {
+        getUserByIdOrThrow(userId);
+        userRepository.deleteUserById(userId);
+    }
+
+    // Validate and retrieve user
+    private User getUserByIdOrThrow(UUID userId) {
         User user = userRepository.getUserById(userId);
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.OK, "User not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
-        userRepository.deleteUserById(userId);
+        return user;
     }
 }
