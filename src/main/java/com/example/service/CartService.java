@@ -1,3 +1,4 @@
+
 package com.example.service;
 
 import com.example.model.Cart;
@@ -19,21 +20,12 @@ public class CartService extends MainService<Cart> {
         this.cartRepository = cartRepository;
     }
 
-<<<<<<< HEAD
-    public Cart addCart(Cart cart) {
-        if (cart.getUserId() == null) {
-            throw new IllegalArgumentException("User ID is required for creating a cart.");
-        }
-        for (Product p : cart.getProducts()) {
-            if (p.getId() == null || p.getName() == null || p.getPrice() < 0) {
-=======
     public Cart addCart(Cart cart){
         if(cart.getUserId() == null){
             throw new IllegalArgumentException("User ID is required for creating a cart.");
         }
         for(Product p : cart.getProducts()){
             if(p.getId() == null || p.getName() == null || p.getPrice() < 0){
->>>>>>> main
                 throw new IllegalArgumentException("Each product must have a valid ID, name, and price.");
             }
         }
@@ -41,15 +33,6 @@ public class CartService extends MainService<Cart> {
         return cartRepository.addCart(cart);
     }
 
-<<<<<<< HEAD
-    public ArrayList<Cart> getCarts() {
-        return cartRepository.getCarts();
-    }
-
-    public Cart getCartById(UUID cartId) {
-        Cart cart = cartRepository.getCartById(cartId);
-        if (cart == null) {
-=======
     public ArrayList<Cart> getCarts(){
         return cartRepository.getCarts();
     }
@@ -57,50 +40,28 @@ public class CartService extends MainService<Cart> {
     public Cart getCartById(UUID cartId){
         Cart cart = cartRepository.getCartById(cartId);
         if(cart == null){
->>>>>>> main
             throw new IllegalArgumentException("Cart not found");
         }
         return cart;
     }
-<<<<<<< HEAD
-
-    public Cart getCartByUserId(UUID userId) {
-        Cart cart = cartRepository.getCartByUserId(userId);
-        if (cart == null) {
-=======
     public Cart getCartByUserId(UUID userId){
         Cart cart = cartRepository.getCartByUserId(userId);
         if(cart == null){
->>>>>>> main
             throw new IllegalArgumentException("Cart not found");
         }
         return cart;
     }
-<<<<<<< HEAD
-
-    public void addProductToCart(UUID cartId, Product product) {
-        if (cartRepository.getCartById(cartId) == null) {
-=======
     public void addProductToCart(UUID cartId, Product product){
         if(cartRepository.getCartById(cartId) == null){
->>>>>>> main
             throw new IllegalArgumentException("Cart not found");
         }
         cartRepository.addProductToCart(cartId, product);
     }
 
-<<<<<<< HEAD
-    public void deleteProductFromCart(UUID cartId, Product product) {
-        cartRepository.deleteProductFromCart(cartId, product);
-    }
-
-    public void deleteCartById(UUID cartId) {
-=======
     public void deleteProductFromCart(UUID cartId, Product product){
         cartRepository.deleteProductFromCart(cartId, product);
     }
     public void deleteCartById(UUID cartId){
->>>>>>> main
         cartRepository.deleteCartById(cartId);
     }
 
