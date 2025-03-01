@@ -3,6 +3,8 @@ package com.example.service;
 import com.example.model.Order;
 import com.example.model.Product;
 import com.example.repository.OrderRepository;
+import com.example.repository.UserRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -12,15 +14,21 @@ import java.util.*;
 public class OrderService extends MainService<Order> {
 
   private final OrderRepository orderRepository;
+  private final UserRepository userRepository;
 
-  public OrderService(OrderRepository orderRepository) {
+  public OrderService(OrderRepository orderRepository, UserRepository userRepository) {
     this.orderRepository = orderRepository;
+    this.userRepository = userRepository;
   }
 
   // Add an order
   public void addOrder(Order order) {
     if (order.getUserId() == null) {
       throw new IllegalArgumentException("User ID is required.");
+    }
+
+    if (userRepository.getUserById(order.getUserId()) == null) {
+      throw new IllegalArgumentException("User with ID " + order.getUserId() + " does not exist.");
     }
 
     if (order.getProducts() == null || order.getProducts().isEmpty()) {
