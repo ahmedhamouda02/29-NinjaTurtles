@@ -66,10 +66,10 @@ public class OrderService extends MainService<Order> {
   }
 
   // Delete specific order
-  public void deleteOrderById(UUID orderId) {
+  public void deleteOrderById(UUID orderId) throws IllegalArgumentException {
     Order order = orderRepository.getOrderById(orderId);
     if (order == null) {
-      throw new IllegalArgumentException("Order not found!");
+      throw new IllegalArgumentException("Order with ID " + orderId + " not found.");
     }
     orderRepository.deleteOrderById(orderId);
   }
