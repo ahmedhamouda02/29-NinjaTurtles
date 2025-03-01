@@ -34,7 +34,6 @@ public class UserService {
             validateOrder(order, user);
         }
 
-        user.setId(UUID.randomUUID());
         users.add(user);
         userRepository.saveAll(users);
         return user;
@@ -79,7 +78,11 @@ public class UserService {
 
     // Get user by ID
     public User getUserById(UUID userId) {
-        return userRepository.getUserById(userId);
+        User user = userRepository.getUserById(userId);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + userId + " not found.");
+        }
+        return user;
     }
 
     // Get all orders for a user
@@ -161,7 +164,7 @@ public class UserService {
     public void deleteUserById(UUID userId) {
         User user = userRepository.getUserById(userId);
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + userId + " not found.");
+            throw new ResponseStatusException(HttpStatus.OK, "User not found");
         }
         userRepository.deleteUserById(userId);
     }

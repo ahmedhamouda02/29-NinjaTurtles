@@ -31,12 +31,11 @@ public class UserController {
     public ResponseEntity<?> addUser(@RequestBody User user) {
         try {
             User newUser = userService.addUser(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+            return ResponseEntity.status(HttpStatus.OK).body(newUser);
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
         } catch (HttpMessageNotReadableException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
         }
@@ -46,6 +45,18 @@ public class UserController {
     @GetMapping("/")
     public ArrayList<User> getUsers() {
         return userService.getUsers();
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getUserById(@PathVariable UUID userId) {
+        try {
+            User user = userService.getUserById(userId);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        }
     }
 
     // Get orders of a specific user
@@ -79,7 +90,7 @@ public class UserController {
     public ResponseEntity<String> removeOrderFromUser(@PathVariable UUID userId, @RequestParam UUID orderId) {
         try {
             userService.removeOrderFromUser(userId, orderId);
-            return ResponseEntity.ok("Order removed successfully!");
+            return ResponseEntity.ok("Order removed successfully");
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
         } catch (Exception e) {
@@ -112,7 +123,7 @@ public class UserController {
     public ResponseEntity<?> deleteUserById(@PathVariable UUID userId) {
         try {
             userService.deleteUserById(userId);
-            return ResponseEntity.ok("User deleted successfully!");
+            return ResponseEntity.ok("User deleted successfully");
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
         } catch (Exception e) {
