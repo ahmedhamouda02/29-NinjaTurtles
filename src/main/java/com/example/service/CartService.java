@@ -46,15 +46,9 @@ public class CartService extends MainService<Cart> {
     }
     public Cart getCartByUserId(UUID userId){
         Cart cart = cartRepository.getCartByUserId(userId);
-        if(cart == null){
-            throw new IllegalArgumentException("Cart not found");
-        }
         return cart;
     }
     public void addProductToCart(UUID cartId, Product product){
-        if(cartRepository.getCartById(cartId) == null){
-            throw new IllegalArgumentException("Cart not found");
-        }
         cartRepository.addProductToCart(cartId, product);
     }
 
