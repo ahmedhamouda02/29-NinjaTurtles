@@ -64,7 +64,7 @@ public class CartRepository extends MainRepository<Cart> {
     }
     public void deleteProductFromCart(UUID cartId, Product product){
         Cart cart = getCartById(cartId);
-        if(cart == null){
+        if(cart == null || cart.getProducts().isEmpty()){
             throw new RuntimeException("Cart not found");
         }
         cart.getProducts().remove(product);
@@ -73,8 +73,14 @@ public class CartRepository extends MainRepository<Cart> {
 
     public void deleteCartById(UUID cartId){
         ArrayList<Cart> carts = findAll();
-        carts.removeIf(cart -> cart.getId().equals(cartId));
+        for(Cart c : carts){
+            if(c.getId().equals(cartId)){
+                carts.remove(c);
+                break;
+            }
+        }
         overrideData(carts);
     }
+
 
 }

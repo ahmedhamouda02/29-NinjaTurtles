@@ -148,7 +148,13 @@ public class UserController {
     public ResponseEntity<String> deleteProductFromCart(@RequestParam UUID userId, @RequestParam UUID productId) {
         try {
             Product product = productService.getProductById(productId);
+            if (product == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+            }
             Cart cart = cartService.getCartByUserId(userId);
+            if (cart == null || cart.getProducts().isEmpty()) {
+                return ResponseEntity.ok("Cart is empty");
+            }
             cartService.deleteProductFromCart(cart.getId(), product);
             return ResponseEntity.ok("Product deleted from cart");
         } catch (ResponseStatusException e) {
