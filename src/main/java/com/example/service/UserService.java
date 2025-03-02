@@ -22,7 +22,13 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private  CartService cartService;
+    private OrderService orderService;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private CartService cartService;
 
     // Constructor with Dependency Injection
     public UserService(UserRepository userRepository) {
@@ -81,7 +87,7 @@ public class UserService {
     // Get all users
     public ArrayList<User> getUsers() {
         ArrayList<User> users = userRepository.getUsers();
-        if(users.isEmpty()) {
+        if (users.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Users not found");
         }
         return users;
@@ -109,16 +115,26 @@ public class UserService {
         }
 
         User user = getUserByIdOrThrow(userId);
+        System.out.println("validated user");
         Cart cart = getCartByUserOrThrow(userId);
+        System.out.println("validated cart");
         double totalPrice = calculateTotalPrice(cart);
+        System.out.println("calculated price");
         Order newOrder = createNewOrder(userId, cart, totalPrice);
+        System.out.println("created new order");
+        orderService.addOrder(newOrder);
+        System.out.println("added order to json through order service");
         userRepository.addOrderToUser(userId, newOrder);
+        System.out.println("added order to user");
         emptyUserCart(cart);
+        System.out.println("empty cart");
     }
 
     // Validate and retrieve user's cart
     private Cart getCartByUserOrThrow(UUID userId) {
+        System.out.println("in cart or throw");
         Cart cart = cartService.getCartByUserId(userId);
+        System.out.println("got cart by user id");
         if (cart == null || cart.getProducts().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot create an order. The cart is empty.");
         }

@@ -1,1 +1,70 @@
-[]
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440001",
+    "userId": "123e4567-e89b-12d3-a456-426614174001",
+    "totalPrice": 100.0,
+    "products": [
+      {
+        "id": "789e8400-e29b-41d4-a716-446655440002",
+        "name": "Laptop",
+        "price": 1200.00
+      },
+      {
+        "id": "789e8400-e29b-41d4-a716-446655440003",
+        "name": "Wireless Mouse",
+        "price": 50.00
+      }
+    ]
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440004",
+    "userId": "123e4567-e89b-12d3-a456-426614174001",
+    "totalPrice": 60.0,
+    "products": [
+      {
+        "id": "889e8400-e29b-41d4-a716-446655440005",
+        "name": "Headphones",
+        "price": 60.00
+      }
+    ]
+  },
+  {
+      "id": "1f7d3b6c-9a42-4d84-9358-6c7c6e5e2d99",
+      "userId": "c56a4180-65aa-42ec-a945-5fd21dec0538",
+      "totalPrice": 1350.00,
+      "products": [
+        {
+          "id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
+          "name": "Smartphone",
+          "price": 1000.00
+        },
+        {
+          "id": "b2c3d4e5-f678-9012-3456-789abcdef012",
+          "name": "Phone Case",
+          "price": 50.00
+        },
+        {
+          "id": "c3d4e5f6-7890-1234-5678-9abcdef01234",
+          "name": "Wireless Charger",
+          "price": 300.00
+        }
+      ]
+    },
+    {
+      "id": "2f9a8b7c-1d34-4e75-bc56-89c0de12f345",
+      "userId": "c56a4180-65aa-42ec-a945-5fd21dec0538",
+      "totalPrice": 60.00,
+      "products": [
+        {
+          "id": "d4e5f6a1-7890-1234-5678-9abcdef01235",
+          "name": "USB-C Cable",
+          "price": 20.00
+        },
+        {
+          "id": "e5f6a1b2-7890-1234-5678-9abcdef01236",
+          "name": "Bluetooth Speaker",
+          "price": 40.00
+        }
+      ]
+    }
+  ]
