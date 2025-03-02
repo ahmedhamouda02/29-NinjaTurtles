@@ -133,8 +133,11 @@ public class UserController {
     @PutMapping("/addProductToCart")
     public ResponseEntity<String> addProductToCart(@RequestParam UUID userId, @RequestParam UUID productId) {
         try {
+            System.out.println("in addProductToCart API in controller");
             Product product = productService.getProductById(productId);
+            System.out.println("Product name: " + product.getName());
             cartService.addProductToCart(userId, product);
+            System.out.println("Product added to cart");
             return ResponseEntity.ok("Product added to cart");
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(e.getReason());

@@ -49,7 +49,9 @@ public class CartService extends MainService<Cart> {
         return cart;
     }
     public void addProductToCart(UUID cartId, Product product){
+        System.out.println("In cart service, adding product to cart");
         cartRepository.addProductToCart(cartId, product);
+        System.out.println("In cart service, added product to cart");
     }
 
     public void deleteProductFromCart(UUID cartId, Product product){

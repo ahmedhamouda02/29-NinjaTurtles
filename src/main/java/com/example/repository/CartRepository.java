@@ -57,20 +57,38 @@ public class CartRepository extends MainRepository<Cart> {
 
 
 
-    public void addProductToCart(UUID cartId, Product product){
+    public void addProductToCart(UUID cartId, Product product) {
+        System.out.println("In cart repository, adding product to cart");
         ArrayList<Cart> carts = findAll();
+        System.out.println("Retrieved carts: " + carts);
+
         Cart cart = getCartById(cartId);
-        if(cart == null){
-            throw new RuntimeException("Cart not found");
+        System.out.println("Got cart by ID: " + cartId + ": " + cart);
+        if (cart == null) {
+            System.out.println("Cart not found for ID: " + cartId);
+            return; // Just exit instead of throwing an exception
         }
+
+        // Ensure the cart has a products list
+        if (cart.getProducts() == null) {
+            cart.setProducts(new ArrayList<>());
+        }
+
+        // Remove the old cart entry
         carts.removeIf(c -> c.getId().equals(cartId));
+
+        // Add the product
         cart.getProducts().add(product);
+        System.out.println("Added product to cart " + cartId + ": " + product);
+
+        // Re-add the updated cart
         carts.add(cart);
+
+        // Override the data
         overrideData(carts);
-
-
-
+        System.out.println("Updated cart list saved successfully.");
     }
+
     public void deleteProductFromCart(UUID cartId, Product product){
         Cart cart = getCartById(cartId);
         if(cart == null || cart.getProducts().isEmpty()){
