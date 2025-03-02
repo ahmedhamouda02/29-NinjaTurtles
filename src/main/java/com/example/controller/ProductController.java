@@ -22,43 +22,37 @@ public class ProductController {
     this.productService = productService;
   }
 
-  // ✅ Add Product (Fixed to Accept `Product` Directly)
   @PostMapping("/")
   public Product addProduct(@RequestBody Product product) {
     return productService.addProduct(product);
   }
 
-  // ✅ Get All Products
   @GetMapping("/")
   public ArrayList<Product> getProducts() {
     return productService.getProducts();
   }
 
-  // ✅ Get a Product by ID (Fixed to Use UUID)
   @GetMapping("/{productId}")
   public Product getProductById(@PathVariable UUID productId) {
     return productService.getProductById(productId);
   }
 
-  // ✅ Update a Product (Fixed to Use UUID)
   @PutMapping("/update/{productId}")
   public Product updateProduct(@PathVariable UUID productId, @RequestBody Map<String, Object> body) {
-    String newName = (String) body.get("name");
-    double newPrice = ((Number) body.get("price")).doubleValue();
+    String newName = (String) body.get("newName");
+    double newPrice = ((Number) body.get("newPrice")).doubleValue();
     return productService.updateProduct(productId, newName, newPrice);
   }
 
-  // ✅ Apply Discount (Fixed to Use UUID)
   @PutMapping("/applyDiscount")
   public String applyDiscount(@RequestParam double discount, @RequestBody ArrayList<UUID> productIds) {
     productService.applyDiscount(discount, productIds);
-    return "Discount applied successfully.";
+    return "Discount applied successfully";
   }
 
-  // ✅ Delete Product (Fixed to Use UUID)
   @DeleteMapping("/delete/{productId}")
   public String deleteProductById(@PathVariable UUID productId) {
     productService.deleteProductById(productId);
-    return "Product deleted successfully.";
+    return "Product deleted successfully";
   }
 }

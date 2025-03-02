@@ -22,20 +22,10 @@ public class OrderService extends MainService<Order> {
     this.userRepository = userRepository;
   }
 
-  // Add an order
   public void addOrder(Order order) {
     if (order.getUserId() == null) {
       throw new IllegalArgumentException("User ID is required.");
     }
-
-    // if (userRepository.getUserById(order.getUserId()) == null) {
-    // userRepository.addUser(new User());
-    // }
-
-    // if (order.getProducts() == null || order.getProducts().isEmpty()) {
-    // throw new IllegalArgumentException("Order must contain at least one
-    // product.");
-    // }
 
     if (order.getTotalPrice() < 0) {
       throw new IllegalArgumentException("Total price cannot be negative.");
@@ -52,25 +42,16 @@ public class OrderService extends MainService<Order> {
     orderRepository.addOrder(order);
   }
 
-  // Get all orders
   public ArrayList<Order> getOrders() {
     return orderRepository.getOrders();
   }
 
-  // Get specific order
   public Order getOrderById(UUID orderId) {
-    // Order order = orderRepository.getOrderById(orderId);
 
-    // if (order == null) {
-    // throw new NoSuchElementException("Order with ID " + orderId + " not found.");
-    // }
-
-    // return order;
     return orderRepository.getOrderById(orderId);
 
   }
 
-  // Delete specific order
   public void deleteOrderById(UUID orderId) {
     Order order = orderRepository.getOrderById(orderId);
     if (order == null) {

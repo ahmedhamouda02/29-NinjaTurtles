@@ -20,7 +20,6 @@ public class OrderRepository extends MainRepository<Order> {
     return Order[].class;
   }
 
-  // Add an order
   public void addOrder(Order order) {
     if (order.getId() == null) {
       order.setId(UUID.randomUUID());
@@ -28,12 +27,10 @@ public class OrderRepository extends MainRepository<Order> {
     save(order);
   }
 
-  // Get all orders
   public ArrayList<Order> getOrders() {
     return findAll();
   }
 
-  // Get specific order by ID
   public Order getOrderById(UUID orderId) {
     return findAll().stream()
         .filter(order -> order.getId().equals(orderId))
@@ -41,7 +38,6 @@ public class OrderRepository extends MainRepository<Order> {
         .orElse(null);
   }
 
-  // Delete an order
   public void deleteOrderById(UUID orderId) {
     ArrayList<Order> orders = findAll();
     orders.removeIf(order -> order.getId().equals(orderId));

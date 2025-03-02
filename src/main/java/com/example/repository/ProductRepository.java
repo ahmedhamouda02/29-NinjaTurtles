@@ -10,35 +10,27 @@ import com.example.model.Product;
 @Repository
 public class ProductRepository extends MainRepository<Product> {
 
-  // ✅ Define the JSON file path
   @Override
   protected String getDataPath() {
     return "src/main/java/com/example/data/products.json";
   }
 
-  // ✅ Define the array type for JSON conversion
   @Override
   protected Class<Product[]> getArrayType() {
     return Product[].class;
   }
 
-  // ✅ Add a New Product and Save to JSON
   public Product addProduct(Product product) {
-    ArrayList<Product> products = findAll(); // Read current products
-
-    product.setId(UUID.randomUUID()); // Ensure a unique ID is assigned
-    products.add(product); // Add new product
-    saveAll(products); // Save back to JSON
-
-    return product; // ✅ Return the added product (to match required method signature)
+    ArrayList<Product> products = findAll();
+    products.add(product);
+    saveAll(products);
+    return product;
   }
 
-  // ✅ Get All Products
   public ArrayList<Product> getProducts() {
-    return findAll(); // Read from JSON
+    return findAll();
   }
 
-  // ✅ Get Product By ID
   public Product getProductById(UUID productId) {
     return findAll().stream()
         .filter(product -> product.getId().equals(productId))
@@ -46,21 +38,19 @@ public class ProductRepository extends MainRepository<Product> {
         .orElse(null);
   }
 
-  // ✅ Update Product and Save to JSON
   public Product updateProduct(UUID productId, String newName, double newPrice) {
     ArrayList<Product> products = findAll();
     for (Product product : products) {
       if (product.getId().equals(productId)) {
         product.setName(newName);
         product.setPrice(newPrice);
-        saveAll(products); // Save updated list to JSON
+        saveAll(products);
         return product;
       }
     }
-    return null; // If product not found
+    return null;
   }
 
-  // ✅ Apply Discount and Save to JSON
   public void applyDiscount(double discount, ArrayList<UUID> productIds) {
     ArrayList<Product> products = findAll();
     for (Product product : products) {
@@ -69,10 +59,9 @@ public class ProductRepository extends MainRepository<Product> {
         product.setPrice(newPrice);
       }
     }
-    saveAll(products); // Save updated prices
+    saveAll(products);
   }
 
-  // ✅ Delete Product and Save to JSON
   public void deleteProductById(UUID productId) {
     ArrayList<Product> products = findAll();
     products.removeIf(product -> product.getId().equals(productId));

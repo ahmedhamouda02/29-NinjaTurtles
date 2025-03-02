@@ -21,7 +21,6 @@ public class ProductService {
     this.productRepository = productRepository;
   }
 
-  // ✅ Add Product (Fixed Method Signature)
   public Product addProduct(Product product) {
     if (product.getName() == null || product.getName().trim().isEmpty()) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product name cannot be empty.");
@@ -29,17 +28,17 @@ public class ProductService {
     if (product.getPrice() < 0) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product price cannot be negative.");
     }
-    product.setId(UUID.randomUUID()); // Ensure ID is assigned
+    if (product.getId() == null) {
+      product.setId(UUID.randomUUID());
+    }
     productRepository.addProduct(product);
     return product;
   }
 
-  // ✅ Get All Products
   public ArrayList<Product> getProducts() {
     return productRepository.getProducts();
   }
 
-  // ✅ Get Product By ID (Fixed UUID Parameter)
   public Product getProductById(UUID productId) {
     Product product = productRepository.getProductById(productId);
     if (product == null) {
@@ -48,7 +47,6 @@ public class ProductService {
     return product;
   }
 
-  // ✅ Update Product (Fixed UUID Parameter)
   public Product updateProduct(UUID productId, String newName, double newPrice) {
     if (newName == null || newName.trim().isEmpty()) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product name cannot be empty.");
@@ -63,7 +61,6 @@ public class ProductService {
     return updatedProduct;
   }
 
-  // ✅ Apply Discount (Fixed UUID Parameter)
   public void applyDiscount(double discount, ArrayList<UUID> productIds) {
     if (discount < 0 || discount > 100) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Discount must be between 0% and 100%.");
@@ -71,7 +68,6 @@ public class ProductService {
     productRepository.applyDiscount(discount, productIds);
   }
 
-  // ✅ Delete Product (Fixed UUID Parameter)
   public void deleteProductById(UUID productId) {
     Product product = productRepository.getProductById(productId);
     if (product == null) {

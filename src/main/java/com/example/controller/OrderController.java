@@ -16,13 +16,11 @@ public class OrderController {
     this.orderService = orderService;
   }
 
-  // Add a new order
   @PostMapping("/")
   public void addOrder(@RequestBody Order order) {
     orderService.addOrder(order);
   }
 
-  // Get a specific order
   @GetMapping("/{orderId}")
   public Order getOrderById(@PathVariable UUID orderId) {
     Order order = orderService.getOrderById(orderId);
@@ -32,13 +30,11 @@ public class OrderController {
     return order;
   }
 
-  // Get all orders
   @GetMapping("/")
   public ArrayList<Order> getOrders() {
     return orderService.getOrders();
   }
 
-  // Delete a specific order
   @DeleteMapping("/delete/{orderId}")
   public String deleteOrderById(@PathVariable UUID orderId) {
     if (orderId == null) {
