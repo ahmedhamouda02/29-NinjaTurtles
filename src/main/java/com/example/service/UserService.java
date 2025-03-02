@@ -211,7 +211,7 @@ public class UserService {
     private User getUserByIdOrThrow(UUID userId) {
         User user = userRepository.getUserById(userId);
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            throw new ResponseStatusException(HttpStatus.OK, "User not found");
         }
         return user;
     }
