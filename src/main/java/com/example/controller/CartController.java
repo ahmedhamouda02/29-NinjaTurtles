@@ -4,6 +4,8 @@ import com.example.model.Cart;
 import com.example.model.Product;
 import com.example.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -56,6 +58,20 @@ public class CartController {
             return "Cart deleted successfully";
         } catch (IllegalArgumentException e){
             return "Error deleting cart";
+        }
+    }
+
+    @GetMapping("/getByUserId/{userId}")
+    public ResponseEntity<?> getCartByUserId(@PathVariable UUID userId) {
+        try {
+            Cart cart = cartService.getCartByUserId(userId);
+            if (cart == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart not found for this user");
+            }
+            return ResponseEntity.ok(cart);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
         }
     }
 
