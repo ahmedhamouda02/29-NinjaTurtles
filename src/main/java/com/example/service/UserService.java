@@ -106,12 +106,9 @@ public class UserService {
     }
 
     // Add an order to a user
-    public void addOrderToUser(UUID userId, Order order) {
+    public void addOrderToUser(UUID userId) {
         if (userId == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID cannot be null.");
-        }
-        if (order == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order cannot be null.");
         }
 
         User user = getUserByIdOrThrow(userId);

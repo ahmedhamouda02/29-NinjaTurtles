@@ -91,9 +91,9 @@ public class UserController {
 
     // Checkout and add orders to user (assuming some checkout process)
     @PostMapping("/{userId}/checkout")
-    public ResponseEntity<?> addOrderToUser(@PathVariable UUID userId, @RequestBody Order order) {
+    public ResponseEntity<?> addOrderToUser(@PathVariable UUID userId) {
         try {
-            userService.addOrderToUser(userId, order);
+            userService.addOrderToUser(userId);
             return ResponseEntity.ok("Order added successfully");
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
