@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -45,17 +46,21 @@ public class CartService extends MainService<Cart> {
         return cart;
     }
     public Cart getCartByUserId(UUID userId){
-        Cart cart = cartRepository.getCartByUserId(userId);
-        if(cart == null){
-            throw new IllegalArgumentException("Cart not found");
-        }
-        return cart;
+         return cartRepository.getCartByUserId(userId);
+
     }
-    public void addProductToCart(UUID cartId, Product product){
-        if(cartRepository.getCartById(cartId) == null){
-            throw new IllegalArgumentException("Cart not found");
+    public void addProductToCart(UUID userId, Product product) {
+        Cart cart = cartRepository.getCartByUserId(userId);
+        if (cart == null) {
+            Cart newCart = new Cart();
+            newCart.setId(UUID.randomUUID());
+            newCart.setUserId(userId);
+            newCart.setProducts(new ArrayList<>(List.of(product)));
+            cartRepository.addCart(newCart);
+        } else {
+            cart.getProducts().add(product);
+            cartRepository.updateCart(cart); // Make sure this updates the existing cart
         }
-        cartRepository.addProductToCart(cartId, product);
     }
 
     public void deleteProductFromCart(UUID cartId, Product product){

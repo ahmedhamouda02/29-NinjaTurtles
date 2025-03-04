@@ -1,7 +1,11 @@
 package com.example.controller;
 
+import com.example.model.Cart;
+import com.example.model.Product;
 import com.example.model.User;
 import com.example.model.Order;
+import com.example.service.CartService;
+import com.example.service.ProductService;
 import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +24,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CartService cartService;
+
+    @Autowired
+    private ProductService productService;
 
     // Constructor with Dependency Injection
     public UserController(UserService userService) {
@@ -43,8 +53,15 @@ public class UserController {
 
     // Get all users
     @GetMapping("/")
-    public ArrayList<User> getUsers() {
-        return userService.getUsers();
+    public ResponseEntity<?> getUsers() {
+        try {
+            ArrayList<User> users = userService.getUsers();
+            return ResponseEntity.status(HttpStatus.OK).body(users);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        }
     }
 
     @GetMapping("/{userId}")
@@ -73,17 +90,17 @@ public class UserController {
     }
 
     // Checkout and add orders to user (assuming some checkout process)
-//    @PostMapping("/{userId}/checkout")
-//    public ResponseEntity<?> addOrderToUser(@PathVariable UUID userId, @RequestBody Order order) {
-//        try {
-//            userService.addOrderToUser(userId, order);
-//            return ResponseEntity.ok("Order added successfully!");
-//        } catch (ResponseStatusException e) {
-//            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
-//        }
-//    }
+    @PostMapping("/{userId}/checkout")
+    public ResponseEntity<?> addOrderToUser(@PathVariable UUID userId, @RequestBody Order order) {
+        try {
+            userService.addOrderToUser(userId, order);
+            return ResponseEntity.ok("Order added successfully");
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        }
+    }
 
     // Remove an order from a user
     @PostMapping("/{userId}/removeOrder")
@@ -101,21 +118,57 @@ public class UserController {
 
     // Empty a user's cart
     @DeleteMapping("/{userId}/emptyCart")
-    public String emptyCart(@PathVariable UUID userId) {
-        userService.emptyCart(userId);
-        return "Cart emptied successfully!";
+    public ResponseEntity<String> emptyCart(@PathVariable UUID userId) {
+        try {
+            userService.emptyCart(userId);
+            return ResponseEntity.ok("Cart emptied successfully");
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        }
     }
 
     // Add a product to a user's cart (assuming a ProductService handles product-related operations)
     @PutMapping("/addProductToCart")
-    public String addProductToCart(@RequestParam UUID userId, @RequestParam UUID productId) {
-        return "Product added to cart!";
+    public ResponseEntity<String> addProductToCart(@RequestParam UUID userId, @RequestParam UUID productId) {
+        try {
+            System.out.println("in addProductToCart API in controller");
+            Product product = productService.getProductById(productId);
+            System.out.println("Product name: " + product.getName());
+            cartService.addProductToCart(userId, product);
+            System.out.println("Product added to cart");
+            return ResponseEntity.ok("Product added to cart");
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        }
     }
 
     // Remove a product from a user's cart
     @PutMapping("/deleteProductFromCart")
-    public String deleteProductFromCart(@RequestParam UUID userId, @RequestParam UUID productId) {
-        return "Product removed from cart!";
+    public ResponseEntity<String> deleteProductFromCart(@RequestParam UUID userId, @RequestParam UUID productId) {
+        try {
+            Product product = productService.getProductById(productId);
+            if (product == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+            }
+            Cart cart = cartService.getCartByUserId(userId);
+            if (cart == null) {
+                return ResponseEntity.ok("Cart is empty"); // ✅ Return 200 with a friendly message
+            }
+            if (cart.getProducts().isEmpty()) {
+                return ResponseEntity.ok("Cart is empty");
+            }
+            cartService.deleteProductFromCart(cart.getId(), product);
+            return ResponseEntity.ok("Product deleted from cart");
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        }
     }
 
     // Delete a user by ID

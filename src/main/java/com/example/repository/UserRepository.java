@@ -48,13 +48,13 @@ public class UserRepository extends MainRepository<User> {
     }
 
 //    // Add an order to a specific user
-//    public void addOrderToUser(UUID userId, Order order) {
-//        User user = getUserById(userId);
-//        if (user != null) {
-//            user.getOrders().add(order);
-//            save(user);
-//        }
-//    }
+    public void addOrderToUser(UUID userId, Order order) {
+        User user = getUserById(userId);
+        if (user != null) {
+            user.getOrders().add(order);
+            save(user);
+        }
+    }
 
     // Remove an order from a user
     public void removeOrderFromUser(UUID userId, UUID orderId) {
