@@ -59,7 +59,7 @@ public class CartService extends MainService<Cart> {
             cartRepository.addCart(newCart);
         } else {
             cart.getProducts().add(product);
-            cartRepository.updateCart(cart); // Make sure this updates the existing cart
+            cartRepository.updateCart(cart); 
         }
     }
 
