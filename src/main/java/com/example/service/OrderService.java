@@ -52,10 +52,13 @@ public class OrderService extends MainService<Order> {
 
   }
 
-  public void deleteOrderById(UUID orderId) {
+  public void deleteOrderById(UUID orderId) throws IllegalArgumentException {
+    if (orderId == null) {
+      throw new IllegalArgumentException("Order ID cannot be null.");
+    }
     Order order = orderRepository.getOrderById(orderId);
     if (order == null) {
-      return;
+      throw new IllegalArgumentException("Order with ID " + orderId + " not found.");
     }
     orderRepository.deleteOrderById(orderId);
   }
