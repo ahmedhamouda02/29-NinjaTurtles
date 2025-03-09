@@ -82,15 +82,19 @@ public class UserService {
 
   public ArrayList<User> getUsers() {
     ArrayList<User> users = userRepository.getUsers();
-    if (users.isEmpty()) {
+
+    if (users == null || users.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Users not found");
     }
+
     return users;
   }
 
   public User getUserById(UUID userId) {
-    User user = getUserByIdOrThrow(userId);
-    return user;
+    if (userId == null) {
+      throw new IllegalArgumentException("User not found");
+    }
+    return getUserByIdOrThrow(userId);
   }
 
   public List<Order> getOrdersByUserId(UUID userId) {
@@ -124,7 +128,7 @@ public class UserService {
     Cart cart = cartService.getCartByUserId(userId);
     System.out.println("got cart by user id");
     if (cart == null || cart.getProducts().isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot create an order. The cart is empty.");
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot create an order. The cart is empty.");
     }
     return cart;
   }

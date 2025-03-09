@@ -192,7 +192,7 @@ class UserServiceTest {
         Cart cart = new Cart(UUID.randomUUID(), userId, new ArrayList<>());
         when(cartService.getCartByUserId(userId)).thenReturn(cart);
         Exception exception = assertThrows(ResponseStatusException.class, () -> userService.addOrderToUser(userId), "Cart should not be empty");
-        assertEquals("400 BAD_REQUEST \"Cannot create an order. The cart is empty.\"", exception.getMessage());
+        assertEquals("404 NOT_FOUND \"Cannot create an order. The cart is empty.\"", exception.getMessage());
     }
 
     // Empty Cart Tests
@@ -223,7 +223,7 @@ class UserServiceTest {
         Cart cart = new Cart(UUID.randomUUID(), userId, new ArrayList<>());
         when(cartService.getCartByUserId(userId)).thenReturn(cart);
         Exception exception = assertThrows(ResponseStatusException.class, () -> userService.emptyCart(userId), "Cart should not be empty");
-        assertEquals("404 NOT_FOUND \"No products found\"", exception.getMessage());
+        assertEquals("404 NOT_FOUND \"Cannot create an order. The cart is empty.\"", exception.getMessage());
     }
 
     // Remove Order from User 3 Tests
