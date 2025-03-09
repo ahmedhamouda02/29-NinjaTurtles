@@ -25,6 +25,9 @@ public class CartService extends MainService<Cart> {
         if(cart.getUserId() == null){
             throw new IllegalArgumentException("User ID is required for creating a cart.");
         }
+//        if (cart.getProducts().isEmpty()){
+//            throw new IllegalArgumentException("Cart must have at least one product.");
+//        }
         for(Product p : cart.getProducts()){
             if(p.getId() == null || p.getName() == null || p.getPrice() < 0){
                 throw new IllegalArgumentException("Each product must have a valid ID, name, and price.");

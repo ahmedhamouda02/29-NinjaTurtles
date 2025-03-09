@@ -45,6 +45,7 @@ public class CartServiceTest {
     @Test
     public void testAddCart_Positive(){
         when(cartRepository.addCart(cartTest)).thenReturn(cartTest);
+        cartTest.getProducts().add(productTest);
         Cart result = cartService.addCart(cartTest);
         assertNotNull(result, "Cart should not be null");
         assertEquals(cartTest.getUserId(), result.getUserId(), "Cart should have the same user ID");
@@ -57,9 +58,13 @@ public class CartServiceTest {
     }
 
     @Test
-    public void testAddCart_Edge() { // CHECK WITH PETER NOT WORKING
-        cartTest.setProducts(null);
-        assertThrows(IllegalArgumentException.class, () -> cartService.addCart(cartTest), "Cart should have products");
+    public void testAddCart_EmptyProductsAccept() { // mustaccept
+        cartTest.setProducts(new ArrayList<>());
+        when(cartRepository.addCart(cartTest)).thenReturn(cartTest);
+        Cart result = cartService.addCart(cartTest);
+        assertNotNull(result, "Cart created even with no products.");
+        assertEquals(0, result.getProducts().size(), "Cart should have an empty product list.");
+
 
 
     }
