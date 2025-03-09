@@ -66,7 +66,7 @@ public class CartController {
         try {
             Cart cart = cartService.getCartByUserId(userId);
             if (cart == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart not found for this user");
+                return ResponseEntity.status(HttpStatus.OK).body("Cart not found for this user");
             }
             return ResponseEntity.ok(cart);
         } catch (Exception e) {
