@@ -140,26 +140,36 @@ public class UserController {
   @PutMapping("/deleteProductFromCart")
   public ResponseEntity<String> deleteProductFromCart(@RequestParam UUID userId, @RequestParam UUID productId) {
     try {
+      // Check if the product exists
       Product product = productService.getProductById(productId);
       if (product == null) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
       }
-      Cart cart = cartService.getCartByUserId(userId);
-      if (cart == null) {
+
+      // Check if the cart exists
+      Cart cart;
+      try {
+        cart = cartService.getCartByUserId(userId);
+      } catch (IllegalArgumentException e) {
+        return ResponseEntity.ok("Cart is empty"); // ✅ Now returning 200 OK instead of 404
+      }
+
+      // Ensure cart is not empty
+      if (cart.getProducts() == null || cart.getProducts().isEmpty()) {
         return ResponseEntity.ok("Cart is empty");
       }
-      if (cart.getProducts().isEmpty()) {
-        return ResponseEntity.ok("Cart is empty");
-      }
+
+      // Remove product from cart
       cartService.deleteProductFromCart(cart.getId(), product);
       return ResponseEntity.ok("Product deleted from cart");
-    } catch (ResponseStatusException e) {
-      return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
     }
   }
+
+
 
   @DeleteMapping("/delete/{userId}")
   public ResponseEntity<?> deleteUserById(@PathVariable UUID userId) {

@@ -46,10 +46,17 @@ public class CartService extends MainService<Cart> {
         return cart;
     }
     public Cart getCartByUserId(UUID userId){
-         return cartRepository.getCartByUserId(userId);
+        Cart cart = cartRepository.getCartByUserId(userId);
+        if (cart == null) {
+            throw new IllegalArgumentException("Cart not found");
+        }
+        return cart;
 
     }
     public void addProductToCart(UUID userId, Product product) {
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID cannot be null");
+        }
         Cart cart = cartRepository.getCartByUserId(userId);
         if (cart == null) {
             Cart newCart = new Cart();
@@ -64,9 +71,15 @@ public class CartService extends MainService<Cart> {
     }
 
     public void deleteProductFromCart(UUID cartId, Product product){
+        if (cartId == null) {
+            throw new IllegalArgumentException("Cart ID cannot be null");
+        }
         cartRepository.deleteProductFromCart(cartId, product);
     }
     public void deleteCartById(UUID cartId){
+        if (cartId == null) {
+            throw new IllegalArgumentException("Cart ID cannot be null");
+        }
         cartRepository.deleteCartById(cartId);
     }
 

@@ -97,6 +97,7 @@ public class CartRepository extends MainRepository<Cart> {
     ArrayList<Cart> carts = findAll();
     boolean cartFound = false;
 
+
     for (Cart cart : carts) {
       if (cart.getId().equals(cartId)) {
         cartFound = true;

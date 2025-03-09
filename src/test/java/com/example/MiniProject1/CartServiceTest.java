@@ -189,7 +189,7 @@ public class CartServiceTest {
             cartService.deleteProductFromCart(null, productTest); // mafrood exception ama adeelo null user id
         });
 
-        assertEquals("User ID cannot be null", exception.getMessage(), "Should throw an error for null user ID");
+        assertEquals("Cart ID cannot be null", exception.getMessage(), "Should throw an error for null user ID");
     }
 
     // DELETE CART BY ID TESTS! 3 tests, 1 positive w 1 negative w 1 edge case
@@ -217,7 +217,7 @@ public class CartServiceTest {
             cartService.deleteCartById(null); // mafrood exception ama adeelo null user id
         });
 
-        assertEquals("User ID cannot be null", exception.getMessage(), "Should throw an error for null user ID");
+        assertEquals("Cart ID cannot be null", exception.getMessage(), "Should throw an error for null user ID");
     }
 
 
