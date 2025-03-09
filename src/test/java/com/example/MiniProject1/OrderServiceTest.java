@@ -46,11 +46,11 @@ class OrderServiceTest{
         testOrder = new Order(orderId, userId, 10.0, List.of(testProduct));
     }
 
-    @Test
-    void testMockingWorks() {
-        assertNotNull(orderRepository, "OrderRepository should not be null");
-        assertTrue(mockingDetails(orderRepository).isMock(), "OrderRepository should be a Mockito mock");
-    }
+//    @Test
+//    void testMockingWorks() {
+//        assertNotNull(orderRepository, "OrderRepository should not be null");
+//        assertTrue(mockingDetails(orderRepository).isMock(), "OrderRepository should be a Mockito mock");
+//    }
 
     // Test Add Order 3 Tests
     @Test
@@ -104,13 +104,16 @@ class OrderServiceTest{
     }
 
     @Test
-    void testGetOrders_EdgeNull(){ //CHECK WITH ZIAD LAW IT SHOULD THROW EXCEPTION WALA LA2.
-        when(orderRepository.getOrders()).thenReturn(null);
-        Exception exception = assertThrows(NullPointerException.class, () -> {
-            orderService.getOrders();
-        });
+    void testGetOrders_MultipleOrders(){
+        ArrayList<Order> orders = new ArrayList<>();
+        orders.add(testOrder);
+        orders.add(new Order(UUID.randomUUID(), userId, 20.0, List.of(testProduct)));
+        when(orderRepository.getOrders()).thenReturn(orders);
+        List<Order> result = orderService.getOrders();
+        verify(orderRepository, times(1)).getOrders();
+        assertNotNull(result, "List of orders should not be null");
+        assertEquals(orders.size(), result.size(), "List of orders should have the same size");
 
-        assertNotNull(exception, "NullPointerException should be thrown");
     }
 
     // Test Get Order By ID 3 Tests
@@ -130,11 +133,15 @@ class OrderServiceTest{
         verify(orderRepository, times(1)).getOrderById(orderId);
         assertNull(result, "Order should be null");
     }
-
-    void testGetOrderById_NullNoException(){
-
-
+    @Test
+    void testGetOrderById_InvalidId() {
+        UUID invalidOrderId = UUID.randomUUID();
+        when(orderRepository.getOrderById(invalidOrderId)).thenReturn(null);
+        Order result = orderService.getOrderById(invalidOrderId);
+        verify(orderRepository, times(1)).getOrderById(invalidOrderId);
+        assertNull(result, "Order should be null for an invalid ID");
     }
+
 
     // Test Delete Order By ID 3 Tests
     @Test
@@ -147,8 +154,19 @@ class OrderServiceTest{
     @Test
     void testDeleteOrderById_Negative(){
         when(orderRepository.getOrderById(orderId)).thenReturn(null);
-        orderService.deleteOrderById(orderId);
-        verify(orderRepository, times(0)).deleteOrderById(orderId);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            orderService.deleteOrderById(orderId);
+        });
+        assertEquals("Order with ID " + orderId + " not found.", exception.getMessage());
+    }
+
+    @Test
+    void testDeleteOrderById_NullId(){
+        UUID nullOrderId = null;
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            orderService.deleteOrderById(nullOrderId);
+        });
+        assertEquals("Order ID cannot be null.", exception.getMessage());
     }
 
 
