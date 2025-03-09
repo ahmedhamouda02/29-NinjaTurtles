@@ -1,14 +1,14 @@
-FROM openjdk:25-ea-4-jdk-oraclelinux9
+FROM openjdk:23-jdk-slim
+
 WORKDIR /app
+
 COPY ./target/ target/
 
-# Environment Variables
-ENV USERS_FILE=/app/data/users.json
-ENV PRODUCTS_FILE =/app/data/products.json
-ENV CARTS_FILE =/app/data/carts.json
-ENV ORDERS_FILE =/app/data/orders.json
-
-RUN mvn clean install
+ENV CARTS_JSON_PATH=/app/data/carts.json
+ENV ORDERS_JSON_PATH=/app/data/orders.json
+ENV PRODUCTS_JSON_PATH=/app/data/products.json
+ENV USERS_JSON_PATH=/app/data/users.json
 
 EXPOSE 8080
-CMD ["java","-jar","/app/target/mini1.jar"]
+
+ENTRYPOINT ["java", "-jar", "target/mini1.jar"]

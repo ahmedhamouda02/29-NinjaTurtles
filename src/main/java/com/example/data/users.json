@@ -1,1 +1,40 @@
-[{"id":"3e32f2ea-429c-4561-ba22-4c1ae9ea9756","name":"Test User18","orders":[]}]
+{
+  "id": "01957c60-6c25-7afe-8a4f-17b680cf47c1",
+  "name": "John Doe",
+  "orders": [
+    {
+      "id": "01957c60-6c25-7293-8dd5-952fc6d779fa",
+      "userId": "01957c60-6c25-7afe-8a4f-17b680cf47c1",
+      "totalPrice": 1500.50,
+      "products": [
+        {
+          "id": "01957c60-6c25-7fab-a89c-03b79c6ddd51",
+          "name": "Laptop",
+          "price": 1200.99
+        },
+        {
+          "id": "01957c60-6c25-75ae-bd2f-9b0796eb9bd6",
+          "name": "Smartphone",
+          "price": 299.51
+        }
+      ]
+    },
+    {
+      "id": "01957c60-6c25-7a87-a05b-5eae963119ef",
+      "userId": "01957c60-6c25-7afe-8a4f-17b680cf47c1",
+      "totalPrice": 100.00,
+      "products": [
+        {
+          "id": "01957c60-6c25-76b5-9742-7649bfce4c9b",
+          "name": "Wireless Mouse",
+          "price": 25.99
+        },
+        {
+          "id": "01957c60-6c25-723c-ab9f-e9fe2ede4ea9",
+          "name": "Keyboard",
+          "price": 74.01
+        }
+      ]
+    }
+  ]
+}

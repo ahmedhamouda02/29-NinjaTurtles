@@ -9,10 +9,13 @@ import java.util.stream.Collectors;
 
 @Repository
 public class UserRepository extends MainRepository<User> {
+  String usersJsonPath = System.getenv("USERS_JSON_PATH");
 
   @Override
   protected String getDataPath() {
-    return "src/main/java/com/example/data/users.json";
+    if (usersJsonPath == null || usersJsonPath.isEmpty())
+      return "src/main/java/com/example/data/users.json";
+    return usersJsonPath;
   }
 
   @Override

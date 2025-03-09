@@ -37,8 +37,10 @@ public class UserController {
 
   @PostMapping("/")
   public ResponseEntity<?> addUser(@RequestBody User user) {
+    System.out.println("In user controller");
     try {
       User newUser = userService.addUser(user);
+      System.out.println("User added successfully");
       return ResponseEntity.status(HttpStatus.OK).body(newUser);
     } catch (ResponseStatusException e) {
       return ResponseEntity.status(e.getStatusCode()).body(e.getReason());

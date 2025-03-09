@@ -35,18 +35,35 @@ public class UserService {
   }
 
   public User addUser(User user) {
+    System.out.println("DEBUG: Entering addUser method...");
+
+    // Fetch existing users from the repository
     ArrayList<User> users = userRepository.getUsers();
+    System.out.println("DEBUG: Fetched users list, current size: " + (users != null ? users.size() : "null"));
 
+    // Validate user
+    System.out.println("DEBUG: Validating user: " + user);
     validateUser(user, users);
+    System.out.println("DEBUG: User validation passed.");
 
-    for (Order order : user.getOrders()) {
-      validateOrder(order, user);
-    }
+    // Debugging orders if needed
+//    for (Order order : user.getOrders()) {
+//        System.out.println("DEBUG: Validating order: " + order);
+//        validateOrder(order, user);
+//    }
 
+    // Add user to list
     users.add(user);
+    System.out.println("DEBUG: Added user to local list. New size: " + users.size());
+
+
+    // Save user to repository
     userRepository.saveAll(users);
+    System.out.println("DEBUG: User successfully saved in repository: " + user);
+
     return user;
   }
+
 
   private void validateUser(User user, ArrayList<User> users) {
     if (user.getName() == null || user.getName().trim().isEmpty()) {
