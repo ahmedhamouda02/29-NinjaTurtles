@@ -36,17 +36,18 @@ public class UserController {
   }
 
   @PostMapping("/")
-  public ResponseEntity<?> addUser(@RequestBody User user) {
-    try {
-      User newUser = userService.addUser(user);
-      return ResponseEntity.status(HttpStatus.OK).body(newUser);
-    } catch (ResponseStatusException e) {
-      return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
-    } catch (HttpMessageNotReadableException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
-    }
+  public User addUser(@RequestBody User user) {
+//    try {
+//      User newUser = userService.addUser(user);
+//      return ResponseEntity.status(HttpStatus.OK).body(newUser);
+//    } catch (ResponseStatusException e) {
+//      return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+//    } catch (HttpMessageNotReadableException e) {
+//      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//    } catch (Exception e) {
+//      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+//    }
+    return userService.addUser(user);
   }
 
   @GetMapping("/")
